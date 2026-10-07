@@ -1,5 +1,5 @@
 export async function saveSubscriptions(token, subscriptions) {
-  const res = await fetch("https://subsdata.top/save-subs", {
+  const res = await fetch("/api/save-subscriptions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

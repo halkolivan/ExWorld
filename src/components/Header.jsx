@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   Lock,
-  Settings,
   FileText,
   CirclePlus,
   LogIn,
@@ -25,7 +24,7 @@ import { party } from "@mock/mockData";
 export default function Header() {
   const { t, i18n } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showPrivacy, setShowPrivacy] = useState(false);
+  // const [showPrivacy, setShowPrivacy] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [openTop, setOpenTop] = useState(false);
 
@@ -87,14 +86,11 @@ export default function Header() {
   });
 
   return (
-    <header className="flex justify-center w-auto sticky top-3 z-50">
+    <header className="flex justify-center w-auto sticky top-0 z-50">
       <nav className="flex flex-col sm:flex-row justify-between w-full min-h-[50px] items-center gap-3 p-4 bg-gray-700 rounded-lg">
         {/* Мои подписки — отключаем, если нет user */}
-        <div className="flex w-full items-center justify-between gap-3 sm:ml-[50px]">
-          <NavLink
-            to={user ? "/mysubscriptions" : "#"}
-            className={"hidden lg:flex "}
-          >
+        <div className="flex w-fit items-center justify-between gap-3">
+          <NavLink to={user ? "/" : "#"} >
             {({ isActive }) => (
               <h5
                 className={
@@ -112,29 +108,7 @@ export default function Header() {
             )}
           </NavLink>
 
-          <NavLink
-            to={user ? "/mysubscriptions" : "#"}
-            className="flex lg:hidden"
-          >
-            {({ isActive }) => (
-              <FileText
-                size={33}
-                className={
-                  user
-                    ? isActive
-                      ? "text-blue-700/90 cursor-pointer"
-                      : "text-gray-900 cursor-pointer"
-                    : "text-gray-500 cursor-not-allowed"
-                }
-                onClick={(e) => {
-                  if (!user) e.preventDefault(); // блокируем переход
-                }}
-              />
-            )}
-          </NavLink>
-
-          {/* Настройки — отключаем, если нет user */}
-          <NavLink to={user ? "/settings" : "#"} className={"hidden lg:flex "}>
+          <NavLink to={user ? "/newsFeed" : "#"} >
             {({ isActive }) => (
               <h5
                 className={
@@ -150,9 +124,9 @@ export default function Header() {
                 <Rss />
               </h5>
             )}
-          </NavLink>
+          </NavLink>         
 
-          <NavLink to={user ? "/settings" : "#"} className={"hidden lg:flex "}>
+          <NavLink to={user ? "/duels" : "#"} >
             {({ isActive }) => (
               <h5
                 className={
@@ -168,38 +142,7 @@ export default function Header() {
                 <Swords />
               </h5>
             )}
-          </NavLink>
-
-          <NavLink
-            to={user ? "/settings" : "#"}
-            className="flex lg:hidden whitespace-nowrap "
-          >
-            {({ isActive }) => (
-              <Settings
-                size={33}
-                className={
-                  user
-                    ? isActive
-                      ? "text-blue-700/90 cursor-pointer"
-                      : "text-gray-900 cursor-pointer"
-                    : "text-gray-500 cursor-not-allowed"
-                }
-                onClick={(e) => {
-                  if (!user) e.preventDefault(); // блокируем переход
-                }}
-              />
-            )}
-          </NavLink>
-
-          {/* 🔒 Кнопка приватности */}
-          {/* <button
-            onClick={() => setShowPrivacy(true)}
-            className="flex min-h-[48px] items-center text-gray-700 hover:!text-gray-900 !font-bold hidden lg:flex hover:shadow-green-400 hover:!border-red-200/0
-            shadow-md shadow-sky-300 active:shadow-green-600 rounded-lg !bg-gray-50/0 "
-          >
-            <Lock className="!bg-gray-50/0" />
-            {t("Privacy")}
-          </button> */}
+          </NavLink>                   
 
           <div className="relative flex w-auto items-center justify-center">
             <div
@@ -214,7 +157,7 @@ export default function Header() {
               aria-controls="top-users-menu"
             >
               <span className="text-white">Ex</span>
-              <span className="text-black ">Free</span>
+              {/* <span className="text-black ">Free</span> */}
             </div>
 
             <div
@@ -228,7 +171,7 @@ export default function Header() {
             >
               <div className="mb-2 flex items-center gap-2 border-b border-gray-600 pb-2 text-sm font-bold">
                 <Trophy size={18} className="text-yellow-400" />
-                <span>Top 3 users</span>
+                <span>{t("TopUsers")}</span>
               </div>
               <ol className="space-y-2">
                 {topUsers.map((topUser, index) => (
@@ -245,7 +188,8 @@ export default function Header() {
                       </span>
                     </span>
                     <span className="shrink-0 text-xs text-gray-300">
-                      {topUser.tricks} tricks / {topUser.likes} likes
+                      {topUser.tricks} {t("Tricks")} / {topUser.likes}{" "}
+                      {t("Likes")}
                     </span>
                   </li>
                 ))}
@@ -253,11 +197,11 @@ export default function Header() {
             </div>
           </div>
 
-          <Lock
+          {/* <Lock
             size={33}
             className="text-gray-800 flex lg:hidden cursor-pointer"
             onClick={() => setShowPrivacy(true)}
-          />
+          /> */}
 
           {/* Sign In / Sign Out */}
           {user ? (
@@ -349,7 +293,7 @@ export default function Header() {
         </div>
 
         {/* Модалка приватности */}
-        {showPrivacy && (
+        {/* {showPrivacy && (
           <div className="fixed flex items-center justify-center bg-black/50 inset-0 !z-50">
             <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full text-gray-700 !z-50 bg-gradient-to-t from-gray-800 via-gray-500 to-gray-800">
               <h2 className="text-lg font-semibold mb-3 text-gray-300">
@@ -368,7 +312,7 @@ export default function Header() {
               </button>
             </div>
           </div>
-        )}
+        )} */}
       </nav>
 
       {/* Модальное окно авторизации */}

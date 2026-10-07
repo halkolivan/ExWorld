@@ -1,10 +1,12 @@
 import { useAuth } from "@/context/auth-context-export";
 import { Mail } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 // Импортируем VITE_API_URL, который указывает на ваш бэкенд на Render
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function SendByEmailButton({ subscriptions }) {
+  const { t } = useTranslation();
   // Получаем токен, userEmail и функцию обновления токена
   // ✅ refreshAccessToken — это Promise-функция, возвращающая новый токен
   const { user, token, refreshAccessToken } = useAuth();
@@ -24,21 +26,21 @@ export default function SendByEmailButton({ subscriptions }) {
     const currentToken = tokenOverride || token;
 
     console.log(
-      `CACHE BUSTER V4 20251026 (Попытка: ${retry ? "Повторная" : "Первая"})`
+      `CACHE BUSTER V4 20251026 (Попытка: ${retry ? "Повторная" : "Первая"})`,
     );
 
     // 2. Проверки
     if (!subscriptions || subscriptions.length === 0) {
-      alert("Нет данных для отправки.");
+      alert(t("EmailNoData"));
       return;
     }
     if (!userEmail) {
-      alert("Не удалось определить email пользователя. Войдите в аккаунт.");
+      alert(t("EmailNoUser"));
       return;
     }
     // Используем currentToken
     if (!currentToken) {
-      alert("Необходимо авторизоваться для отправки данных.");
+      alert(t("EmailAuthRequired"));
       return;
     }
 
@@ -71,7 +73,7 @@ export default function SendByEmailButton({ subscriptions }) {
       // 🛑 ЛОГИКА ОБНОВЛЕНИЯ ТОКЕНА И ПОВТОРА
       if (res.status === 401 && !retry) {
         console.warn(
-          "⚠️ Токен устарел (401). Запускаем обновление и повтор запроса."
+          "⚠️ Токен устарел (401). Запускаем обновление и повтор запроса.",
         );
 
         // ЖДЕМ, ПОКА АСИНХРОННАЯ ФУНКЦИЯ ВЕРНЕТ НОВЫЙ ТОКЕН
@@ -82,9 +84,7 @@ export default function SendByEmailButton({ subscriptions }) {
           // ✅ ПОВТОРЯЕМ ЗАПРОС, ЯВНО ПЕРЕДАВАЯ НОВЫЙ ТОКЕН
           return sendEmail(true, newToken);
         } else {
-          alert(
-            "❌ Критическая ошибка: Не удалось обновить токен авторизации. Пожалуйста, перезагрузите страницу и войдите снова."
-          );
+          alert(t("EmailSendError"));
           return;
         }
       }
@@ -93,14 +93,14 @@ export default function SendByEmailButton({ subscriptions }) {
       const data = await res.json();
 
       if (res.ok) {
-        alert(`✅ Письмо успешно отправлено на ${userEmail}`);
+        alert(t("EmailSent", { email: userEmail }));
       } else {
         console.error("Ошибка API:", data.error, res.status);
-        alert(`❌ Ошибка отправки: ${data.error || "Произошла ошибка."}`);
+        alert(t("EmailSendError"));
       }
     } catch (error) {
       console.error("Ошибка fetch:", error);
-      alert("❌ Не удалось отправить запрос на сервер.");
+      alert(t("EmailSendError"));
     }
   };
 
@@ -115,7 +115,7 @@ export default function SendByEmailButton({ subscriptions }) {
       }`}
     >
       <Mail size={20} />
-      <span>Отправить на email</span>
+      <span>{t("EmailSend")}</span>
     </button>
   );
 }

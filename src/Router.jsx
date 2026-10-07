@@ -8,8 +8,8 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 const Home = lazy(() => import("./pages/Home"));
 const Privacy = lazy(() => import("@pages/Privacy.jsx"))
 const Terms = lazy(() => import("./pages/Terms.jsx"))
-const Settings = lazy(() => import("./pages/Settings"));
-const MySubscriptions = lazy(() => import("./pages/MySubscriptions"));
+const Duels = lazy(() => import("./pages/Duels"));
+const NewsFeed = lazy(() => import("./pages/NewsFeed"));
 export default function Router() {
   const router = createBrowserRouter([
     {
@@ -18,18 +18,18 @@ export default function Router() {
       children: [
         { path: "/", element: <Home /> },
         {
-          path: "/settings",
+          path: "/duels",
           element: (
             <ProtectedRoute>
-              <Settings />
+              <Duels />
             </ProtectedRoute>
           ),
         },
         {
-          path: "/mysubscriptions",
+          path: "/newsFeed",
           element: (
             <ProtectedRoute>
-              <MySubscriptions />
+              <NewsFeed />
             </ProtectedRoute>
           ),
         },

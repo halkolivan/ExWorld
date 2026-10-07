@@ -1,5 +1,5 @@
 {
-  "name": "subsdata",
+  "name": "ex-world",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,10 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "auth-server": "node server.js",
-    "prestart": "npm run build",
-    "start": "node server.js"
+    "preview": "vite preview"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
@@ -46,6 +43,7 @@
     "i18next-http-backend": "^3.0.2",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.544.0",
+    "mapbox-gl": "^3.31.0",
     "node-fetch": "^3.3.2",
     "nodemailer": "^7.0.10",
     "react": "^18.3.1",
@@ -54,20 +52,11 @@
     "react-i18next": "^16.0.0",
     "react-router-dom": "^7.9.2"
   },
-  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "description": "ExWorld web application",
   "engines": {
     "node": "22.x"
   },
-  "main": "eslint.config.js",
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/halkolivan/SubsData.git"
-  },
-  "bugs": {
-    "url": "https://github.com/halkolivan/SubsData/issues"
-  },
-  "homepage": "https://github.com/halkolivan/SubsData#readme"
+  "license": "ISC"
 }

@@ -11,6 +11,7 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   root: "src",
+  envDir: __dirname,
   base: "/",
   publicDir: path.resolve(__dirname, "public"),
 
@@ -19,7 +20,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       srcDir: "./",
-      outDir: "dist",
+      outDir: "../dist",
       registerType: "autoUpdate",
       devOptions: { enabled: true },
       includeAssets: [
@@ -29,8 +30,8 @@ export default defineConfig({
         "auto",
       ],
       manifest: {
-        name: "SubsData",
-        short_name: "SubsData",
+        name: "ExWorld",
+        short_name: "ExWorld",
         description: "Управляй своими подписками удобно и просто.",
         theme_color: "#ffffff",
         background_color: "#ffffff",
