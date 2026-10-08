@@ -35,6 +35,8 @@ export default function Home() {
         style: "mapbox://styles/mapbox/streets-v12",
         center,
         zoom,
+        minZoom: 0,
+        projection: "globe",
       });
 
       map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
@@ -51,17 +53,17 @@ export default function Home() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         ({ coords }) => {
-          initializeMap([coords.longitude, coords.latitude], 14, true);
+          initializeMap([coords.longitude, coords.latitude], 1, true);
         },
         (error) => {
           console.warn("Не удалось получить местоположение:", error.message);
-          initializeMap(fallbackCenter, 9);
+          initializeMap(fallbackCenter, 1);
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
       );
     } else {
       console.warn("Геолокация не поддерживается этим браузером.");
-      initializeMap(fallbackCenter, 9);
+      initializeMap(fallbackCenter, 1);
     }
 
     // Очистка при размонтировании компонента
