@@ -1,6 +1,9 @@
 {
   "SignIn": "Autentificare",
   "SignOut": "Deconectare",
+  "ConfirmLogout": "Vă deconectați?",
+  "Yes": "Da",
+  "No": "Nu",
   "SignInWithGoogle": "Autentificare cu Google",
   "SignInWithGitHub": "Autentificare cu GitHub",
   "Privacy": "Confidențialitate",

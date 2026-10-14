@@ -1,6 +1,9 @@
 {
   "SignIn": "Inloggen",
   "SignOut": "Uitloggen",
+  "ConfirmLogout": "Uitloggen?",
+  "Yes": "Ja",
+  "No": "Nee",
   "SignInWithGoogle": "Inloggen met Google",
   "SignInWithGitHub": "Inloggen met GitHub",
   "Privacy": "Privacy",

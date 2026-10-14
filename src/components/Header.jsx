@@ -24,6 +24,7 @@ import { party } from "@mock/mockData";
 export default function Header() {
   const { t, i18n } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
   // const [showPrivacy, setShowPrivacy] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [openTop, setOpenTop] = useState(false);
@@ -219,8 +220,7 @@ export default function Header() {
                 size={23}
                 className="text-yellow-700 cursor-pointer hover:text-yellow-600 transition-transform duration-150 hover:scale-110"
                 onClick={() => {
-                  logout();
-                  navigate("/");
+                  setIsLogoutConfirmOpen(true);
                 }}
               />
             </div>
@@ -354,6 +354,41 @@ export default function Header() {
             >
               {t("SignInWithGitHub")}
             </button> */}
+          </div>
+        </div>
+      )}
+
+      {isLogoutConfirmOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="logout-confirm-title"
+        >
+          <div className="w-[min(400px,calc(100%-2rem))] rounded-lg bg-gradient-to-t from-gray-800 via-gray-700 to-gray-800 p-6 text-gray-100 shadow-lg">
+            <h2 id="logout-confirm-title" className="mb-5 text-xl font-bold">
+              {t("ConfirmLogout")}
+            </h2>
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setIsLogoutConfirmOpen(false)}
+                className="rounded px-4 py-2 !bg-gray-600 text-white hover:!bg-gray-500"
+              >
+                {t("No")}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsLogoutConfirmOpen(false);
+                  logout();
+                  navigate("/");
+                }}
+                className="rounded px-4 py-2 !bg-red-700 text-white hover:!bg-red-600"
+              >
+                {t("Yes")}
+              </button>
+            </div>
           </div>
         </div>
       )}

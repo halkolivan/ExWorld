@@ -1,6 +1,9 @@
 {
   "SignIn": "Iniciar sessão",
   "SignOut": "Terminar sessão",
+  "ConfirmLogout": "Terminar sessão?",
+  "Yes": "Sim",
+  "No": "Não",
   "SignInWithGoogle": "Iniciar sessão com Google",
   "SignInWithGitHub": "Iniciar sessão com GitHub",
   "Privacy": "Privacidade",

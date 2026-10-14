@@ -1,6 +1,9 @@
 {
   "SignIn": "Accedi",
   "SignOut": "Esci",
+  "ConfirmLogout": "Uscire?",
+  "Yes": "Sì",
+  "No": "No",
   "SignInWithGoogle": "Accedi con Google",
   "SignInWithGitHub": "Accedi con GitHub",
   "Privacy": "Privacy",

@@ -1,6 +1,9 @@
 {
   "SignIn": "Войти",
   "SignOut": "Выйти",
+  "ConfirmLogout": "Выйти?",
+  "Yes": "Да",
+  "No": "Нет",
   "SignInWithGoogle": "Войти через Google",
   "SignInWithGitHub": "Войти через GitHub",
   "Privacy": "Конфиденциальность",
