@@ -9,7 +9,7 @@ export default function Template() {
   return (
     <>
       <Header />
-      <Outlet context={{ selectedSport }} />
+      <Outlet context={{ selectedSport, setSelectedSport }} />
       <Footer selectedSport={selectedSport} onSportChange={setSelectedSport} />
     </>
   );

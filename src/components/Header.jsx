@@ -185,7 +185,7 @@ export default function Header() {
                         {index + 1}
                       </span>
                       <span className="truncate font-semibold">
-                        {topUser.name}
+                        {topUser.email?.split("@")[0] || topUser.name}
                       </span>
                     </span>
                     <span className="shrink-0 text-xs text-gray-300">
