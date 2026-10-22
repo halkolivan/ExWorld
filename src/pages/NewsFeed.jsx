@@ -7,11 +7,12 @@ import {
   ThumbsUp,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
 import { useAuth } from "@/context/auth-context-export";
 import { party } from "@mock/mockData";
+import { supabase } from "@/supabaseClient";
 
 const sportCategories = ["BMX", "Skate", "Moto"];
 
@@ -50,12 +51,66 @@ export default function NewsFeed() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [createdContent, setCreatedContent] = useState([]);
   const [formErrors, setFormErrors] = useState({});
+  const [postsError, setPostsError] = useState("");
+  const [isPublishing, setIsPublishing] = useState(false);
   const filteredParty = [...createdContent, ...party].filter(
     (item) => item.category === selectedSport,
   );
 
-  function publishContent(event) {
+  useEffect(() => {
+    if (!user?.id) {
+      setCreatedContent([]);
+      return undefined;
+    }
+
+    let isCurrentUser = true;
+    setCreatedContent([]);
+    setPostsError("");
+
+    async function loadPosts() {
+      const { data, error } = await supabase
+        .from("posts")
+        .select("id, user_id, author_name, title, video_url, category")
+        // .eq("user_id", String(user.id))
+        .order("created_at", { ascending: false });
+
+      if (!isCurrentUser) return;
+
+      if (error) {
+        console.error("Failed to load posts from Supabase:", error);
+        setPostsError(t("PostsLoadError"));
+        return;
+      }
+
+      setPostsError("");
+      setCreatedContent(
+        data.map((post) => ({
+          id: post.id,
+          userId: post.user_id,
+          name: post.author_name,
+          title: post.title,
+          videoUrl: post.video_url,
+          category: post.category,
+          likes: 0,
+          dislikes: 0,
+          comments: 0,
+          duels: 0,
+          tricks: 1,
+        })),
+      );
+    }
+
+    loadPosts();
+
+    return () => {
+      isCurrentUser = false;
+    };
+  }, [user?.id, t]);
+
+  async function publishContent(event) {
     event.preventDefault();
+    if (isPublishing) return;
+
     const formData = new FormData(event.currentTarget);
     const title = formData.get("trickTitle").trim();
     const videoUrl = formData.get("videoUrl").trim();
@@ -82,13 +137,52 @@ export default function NewsFeed() {
     setFormErrors(errors);
     if (Object.keys(errors).length > 0) return;
 
+    // Проверяем, авторизован ли пользователь через ваш AuthContext
+    if (!user?.id) {
+      setPostsError(t("PostsSaveError"));
+      return;
+    }
+
+    setIsPublishing(true);
+    setPostsError("");
+
+    const authorName =
+      getNickname(user.email) || user.name || t("UnknownAuthor");
+    let data;
+
+    try {
+      // 🚀 Сохраняем в таблицу `posts` в Supabase
+      const result = await supabase
+        .from("posts")
+        .insert({
+          user_id: String(user.id), // Берем ID из вашей авторизации
+          author_name: authorName, // Имя пользователя
+          title: title, // Заголовок
+          video_url: videoUrl, // Ссылка на видео (соответствует колонке в базе)
+          category: category, // Категория (BMX, Skate, Moto)
+        })
+        .select("id, user_id, author_name, title, video_url, category")
+        .single();
+
+      if (result.error) throw result.error;
+      data = result.data;
+    } catch (error) {
+      console.error("Failed to save post to Supabase:", error);
+      setPostsError(t("PostsSaveError"));
+      return;
+    } finally {
+      setIsPublishing(false);
+    }
+
+    // Добавляем новый пост в локальный стейт, чтобы он сразу появился на экране
     setCreatedContent((content) => [
       {
-        id: `user-${Date.now()}`,
-        name: getNickname(user?.email) || t("UnknownAuthor"),
-        title,
-        videoUrl,
-        category,
+        id: data.id,
+        userId: data.user_id,
+        name: data.author_name,
+        title: data.title,
+        videoUrl: data.video_url,
+        category: data.category,
         likes: 0,
         dislikes: 0,
         comments: 0,
@@ -129,6 +223,11 @@ export default function NewsFeed() {
             {t("FilterDate")}
           </button>
         </div>
+        {postsError && (
+          <p role="alert" className="rounded-lg bg-red-900/60 p-3 text-red-100">
+            {postsError}
+          </p>
+        )}
         {filteredParty.map((item) => (
           <article
             key={item.id}
@@ -377,9 +476,10 @@ export default function NewsFeed() {
                 </button>
                 <button
                   type="submit"
-                  className="rounded-lg bg-fuchsia-600 px-4 py-2 font-medium text-white transition-colors hover:bg-fuchsia-500"
+                  disabled={isPublishing}
+                  className="rounded-lg bg-fuchsia-600 px-4 py-2 font-medium text-white transition-colors hover:bg-fuchsia-500 disabled:cursor-wait disabled:opacity-60"
                 >
-                  {t("Publish")}
+                  {isPublishing ? t("Publishing") : t("Publish")}
                 </button>
               </div>
             </form>
