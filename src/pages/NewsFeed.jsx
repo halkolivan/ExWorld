@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
 import { useAuth } from "@/context/auth-context-export";
 import { party } from "@mock/mockData";
-import { supabase } from "@/supabaseClient";
+import { isSupabaseConfigured, supabase } from "@/supabaseClient";
 
 const sportCategories = ["BMX", "Skate", "Moto"];
 
@@ -68,6 +68,11 @@ export default function NewsFeed() {
     setPostsError("");
 
     async function loadPosts() {
+      if (!isSupabaseConfigured) {
+        setPostsError(t("SupabaseConfigError"));
+        return;
+      }
+
       const { data, error } = await supabase
         .from("posts")
         .select("id, user_id, author_name, title, video_url, category")
@@ -140,6 +145,11 @@ export default function NewsFeed() {
     // Проверяем, авторизован ли пользователь через ваш AuthContext
     if (!user?.id) {
       setPostsError(t("PostsSaveError"));
+      return;
+    }
+
+    if (!isSupabaseConfigured) {
+      setPostsError(t("SupabaseConfigError"));
       return;
     }
 

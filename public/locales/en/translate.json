@@ -14,6 +14,7 @@
   "Cancel": "Cancel",
   "Publish": "Publish",
   "Publishing": "Publishing...",
+  "SupabaseConfigError": "Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to the project environment.",
   "PostsLoadError": "Could not load your posts from Supabase.",
   "PostsSaveError": "Could not save the post to Supabase. Please try again.",
   "UnknownAuthor": "User",

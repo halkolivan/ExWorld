@@ -14,6 +14,7 @@
   "Cancel": "Отмена",
   "Publish": "Опубликовать",
   "Publishing": "Публикация...",
+  "SupabaseConfigError": "Supabase не настроен. Добавьте VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY в переменные окружения проекта.",
   "PostsLoadError": "Не удалось загрузить ваши публикации из Supabase.",
   "PostsSaveError": "Не удалось сохранить публикацию в Supabase. Попробуйте ещё раз.",
   "UnknownAuthor": "Пользователь",
