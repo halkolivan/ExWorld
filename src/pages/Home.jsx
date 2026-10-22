@@ -78,7 +78,9 @@ export default function Home() {
 
   return (
     <main className="relative flex w-full items-center justify-center overflow-hidden">
-      <div className="absolute top-10 left-5 z-5 text-amber-500">Build 0.0.4</div>
+      <div className="absolute top-10 left-5 z-5 text-amber-500">
+        Build 0.0.5
+      </div>
       <div className="flex w-full flex-col items-start bg-gray-800 mt-5">
         <div
           ref={mapContainer}
