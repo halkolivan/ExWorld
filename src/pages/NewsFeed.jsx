@@ -77,7 +77,7 @@ export default function NewsFeed() {
         .from("posts")
         .select("id, user_id, author_name, title, video_url, category")
         // .eq("user_id", String(user.id))
-        .order("created_at", { ascending: false });
+        .order("id", { ascending: false });
 
       if (!isCurrentUser) return;
 
@@ -168,6 +168,7 @@ export default function NewsFeed() {
           user_id: String(user.id), // Берем ID из вашей авторизации
           author_name: authorName, // Имя пользователя
           title: title, // Заголовок
+          url: videoUrl,
           video_url: videoUrl, // Ссылка на видео (соответствует колонке в базе)
           category: category, // Категория (BMX, Skate, Moto)
         })
@@ -218,7 +219,11 @@ export default function NewsFeed() {
             }}
             className="flex size-10 !p-0 items-center justify-center rounded-lg !bg-green-600/30 !text-white transition-colors hover:!bg-fuchsia-500"
           >
-            <Plus aria-hidden="true" className="size-6 shrink-0" strokeWidth={2.5} />
+            <Plus
+              aria-hidden="true"
+              className="size-6 shrink-0"
+              strokeWidth={2.5}
+            />
           </button>
           <button
             type="button"
@@ -240,7 +245,7 @@ export default function NewsFeed() {
         )}
         {filteredParty.map((item) => (
           <article
-            key={item.id}
+            key={`${item.userId ?? "mock"}-${item.id}`}
             className="overflow-hidden rounded-lg border border-gray-600 bg-gray-700"
           >
             <header className="flex items-center gap-3 p-4">
@@ -289,12 +294,10 @@ export default function NewsFeed() {
                     referrerPolicy="strict-origin-when-cross-origin"
                     allowFullScreen
                   />
-                ) : /\.(?:mp4|webm|ogg)$/i.test(new URL(item.videoUrl).pathname) ? (
-                  <video
-                    controls
-                    className="h-full w-full"
-                    src={item.videoUrl}
-                  >
+                ) : /\.(?:mp4|webm|ogg)$/i.test(
+                    new URL(item.videoUrl).pathname,
+                  ) ? (
+                  <video controls className="h-full w-full" src={item.videoUrl}>
                     {t("VideoUnsupported")}
                   </video>
                 ) : (
@@ -408,7 +411,10 @@ export default function NewsFeed() {
                   className="w-full rounded-lg border border-gray-500 bg-gray-900 px-3 py-2 text-white outline-none focus:border-fuchsia-400"
                 />
                 {formErrors.trickTitle && (
-                  <p id="trick-title-error" className="mt-1 text-sm text-red-300">
+                  <p
+                    id="trick-title-error"
+                    className="mt-1 text-sm text-red-300"
+                  >
                     {formErrors.trickTitle}
                   </p>
                 )}
