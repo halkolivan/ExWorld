@@ -9,13 +9,6 @@ export default function Privacy() {
       <p className="mt-5">{t("PrivacyPolicyUpdated")}</p>
       <p>{t("PrivacyPolicyIntro")}</p>
       <p>{t("PrivacyPolicyStorage")}</p>
-      <p>
-        {t("PrivacyPolicyOAuth")}{" "}
-        <code className="text-sm">
-          https://www.googleapis.com/auth/drive.file
-        </code>
-        {t("PrivacyPolicyOAuthEnd")}
-      </p>
       <p>{t("PrivacyPolicyRevoke")}</p>
       <p>
         {t("PrivacyPolicyContact")}{" "}

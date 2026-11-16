@@ -2,6 +2,18 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Google sign-in and post access
+
+Google sign-in uses Supabase Auth. Enable the Google provider under Supabase
+Authentication settings and configure its Google OAuth client ID and secret.
+Add `https://uaopaywsjxgsphlfkyvb.supabase.co/auth/v1/callback` as an authorized
+redirect URI in Google Cloud. Add `http://localhost:5173/auth/callback` and the
+production callback URL to Supabase's allowed redirect URLs.
+
+Apply the migrations in `supabase/migrations` to the project. Posts remain
+publicly readable, while creating, editing, and deleting posts requires a
+Supabase-authenticated Google user.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh

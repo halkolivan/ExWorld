@@ -14,10 +14,9 @@ import {
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import SaveButton from "@/components/SaveButton";
-import { useGoogleLogin } from "@react-oauth/google";
 import { useAuth } from "@/context/auth-context-export";
 import { party } from "@mock/mockData";
+import { isSupabaseConfigured, supabase } from "@/supabaseClient";
 
 // const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
 
@@ -28,6 +27,7 @@ export default function Header() {
   // const [showPrivacy, setShowPrivacy] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [openTop, setOpenTop] = useState(false);
+  const [authError, setAuthError] = useState("");
 
   const topUsers = [...party]
     .sort((firstUser, secondUser) => {
@@ -40,7 +40,6 @@ export default function Header() {
 
   const {
     user,
-    login,
     logout,
     // setIsAuthModalOpen,
     // isAddModalOpen,
@@ -54,37 +53,26 @@ export default function Header() {
     i18n.changeLanguage(lng);
   };
 
-  // Google Login с полными правами для Drive
-  // Header.jsx
-  const loginWithGoogle = useGoogleLogin({
-    scope: "email profile openid https://www.googleapis.com/auth/drive.file",
-    onSuccess: async (tokenResponse) => {
-      try {
-        const userInfo = await fetch(
-          "https://www.googleapis.com/oauth2/v2/userinfo",
-          {
-            headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-          },
-        ).then((res) => res.json());
+  const loginWithGoogle = async () => {
+    if (!isSupabaseConfigured || !supabase) {
+      setAuthError(t("SupabaseConfigError"));
+      return;
+    }
 
-        // ✅ ИСПРАВЛЕНО: Добавлен обязательный уникальный ID
-        login(
-          {
-            // 🔑 КЛЮЧЕВОЙ МОМЕНТ: Используем ID для уникального сохранения
-            id: userInfo.id,
-            name: userInfo.name,
-            email: userInfo.email,
-            picture: userInfo.picture,
-          },
-          tokenResponse.access_token,
-        );
-        setIsModalOpen(false);
-      } catch (err) {
-        console.error("Ошибка при получении данных Google:", err);
-      }
-    },
-    onError: () => console.log("Login Failed"),
-  });
+    setAuthError("");
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) throw error;
+    } catch (error) {
+      console.error("Failed to start Google sign-in:", error);
+      setAuthError(error.message || t("PostsSaveError"));
+    }
+  };
 
   return (
     <header className="flex justify-center w-auto sticky top-0 z-50">
@@ -334,11 +322,16 @@ export default function Header() {
 
             {/* Google Auth */}
             <button
-              onClick={() => loginWithGoogle()}
+              onClick={loginWithGoogle}
               className="w-full px-4 py-2 !bg-gray-800 hover:!bg-gray-700 text-white rounded-sm mt-3 border !border-gray-400"
             >
               {t("SignInWithGoogle")}
             </button>
+            {authError && (
+              <p role="alert" className="mt-3 text-sm text-red-200">
+                {authError}
+              </p>
+            )}
 
             {/* GitHub Auth */}
             {/* <button
@@ -381,8 +374,11 @@ export default function Header() {
                 type="button"
                 onClick={() => {
                   setIsLogoutConfirmOpen(false);
-                  logout();
-                  navigate("/");
+                  logout()
+                    .then(() => navigate("/"))
+                    .catch((error) =>
+                      console.error("Failed to sign out:", error),
+                    );
                 }}
                 className="rounded px-4 py-2 !bg-red-700 text-white hover:!bg-red-600"
               >
